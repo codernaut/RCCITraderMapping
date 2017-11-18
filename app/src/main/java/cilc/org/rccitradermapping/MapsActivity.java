@@ -11,6 +11,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.GeoPoint;
 
 import java.io.IOException;
@@ -57,7 +59,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Address location = address.get(0);
         location.getLatitude();
         location.getLongitude();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("message");
 
+        myRef.setValue("Hello, World!");
         p1 = new GeoPoint(location.getLatitude() * 1E6,
                 location.getLongitude() * 1E6);
         // Add a marker in Sydney and move the camera
