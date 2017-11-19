@@ -63,12 +63,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         DatabaseReference myRef = database.getReference("message");
 
         myRef.setValue("Hello, World!");
-        p1 = new GeoPoint(location.getLatitude() * 1E6,
-                location.getLongitude() * 1E6);
+        //  p1 = new GeoPoint(location.getLatitude() * 1E6,
+        //          location.getLongitude() * 1E6);
         // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(location.getLatitude(), location.getLongitude());
-        mMap.addMarker(new MarkerOptions().title("Marker in Gularequaid"));
+        //mMap.addMarker(new MarkerOptions().title("Marker in Gularequaid"));
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Gulzairequaid"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 17.0f));
+        //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
     }
 }
