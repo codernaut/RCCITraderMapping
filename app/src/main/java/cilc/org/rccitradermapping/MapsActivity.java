@@ -4,6 +4,10 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -27,9 +31,59 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        String[] items = new String[]{"Gul", "School", "Office"};
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, items);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String locationString = "";
+                if (position == 0)
+                    locationString = "GulzareQuaid Rawalpindi";
+                else if (position == 1)
+                    locationString = "ufone tower islamabad";
+                else if (position == 2)
+                    locationString = "faisalabad";
+
+                Geocoder coder = new Geocoder(mapFragment.getContext());
+
+                List<Address> address = null;
+                GeoPoint p1 = null;
+                try {
+                    address = coder.getFromLocationName(locationString, 1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Address location = address.get(0);
+                location.getLatitude();
+                location.getLongitude();
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference myRef = database.getReference("message");
+
+                myRef.setValue("Hello, World!");
+                //  p1 = new GeoPoint(location.getLatitude() * 1E6,
+                //          location.getLongitude() * 1E6);
+                // Add a marker in Sydney and move the camera
+                LatLng sydney = new LatLng(location.getLatitude(), location.getLongitude());
+                //mMap.addMarker(new MarkerOptions().title("Marker in "+locationString));
+                mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in " + locationString));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 17.0f));
+                //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
     }
 
 
@@ -52,7 +106,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         List<Address> address = null;
         GeoPoint p1 = null;
         try {
-            address = coder.getFromLocationName("Gulzarwequaid Rawalpindi", 1);
+            address = coder.getFromLocationName("Gulzarequaid Rawalpindi", 1);
         } catch (IOException e) {
             e.printStackTrace();
         }
